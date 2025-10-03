@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from auth.types import UserCreateRequest
 
 # import core logic functions
-from auth.types import 
+from auth.logic import AuthLogic
 app = FastAPI()
 
 
