@@ -6,3 +6,11 @@ class UserCreateRequest(BaseModel):
     username: str
     password: str
     email: str
+
+class UserTokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+
+class UserLoginRequest(BaseModel):
+    email: str
+    password: str

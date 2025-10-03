@@ -9,5 +9,5 @@ class User(SQLModel, table=True):
     id: int = Field(primary_key=True)
     firstname: str
     lastname: str
-    email: str
+    email: str = Field(unique=True)
     hpassword: str

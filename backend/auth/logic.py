@@ -1,19 +1,55 @@
-# logic + helpers
-from backend.auth.utypes import UserCreateRequest
-import bcrypt
+# function imports
+from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest
 from backend.database.orm import User
 from backend.database.conn import get_session
+from dotenv import load_dotenv
+from jose import jwt, JWTError
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+# package imports
+import bcrypt
 import re
+import os
 
 # fast api imports
 from fastapi import HTTPException
+
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(env_path)
 
 class AuthLogic:
     def __init__(self):
         self.email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
         self.pw_regex = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+        self.secret_key = os.getenv('SECRET_KEY')
+        self.algo = os.getenv('ALGORITHM')
 
-    def user_create(self, req: UserCreateRequest):
+    def create_access_token(self, user_id: int) -> jwt:
+        """
+        Creates a JWT with the user id as the subject
+        """
+        expire = datetime.now(timezone.utc) + timedelta(minutes=60)
+        payload = {
+            "sub": str(user_id), 
+            "exp": expire.timestamp()
+        }
+        return jwt.encode(payload, self.secret_key, self.algo)
+    
+    def validate_access_token(self, access_token: str) -> int:
+        """
+        Returns the user ID 
+        """
+        try:
+            payload = jwt.decode(access_token, self.secret_key, algorithms=[self.algo])
+            user_id = payload.get('sub')
+            if user_id is None:
+                raise HTTPException(status_code=401, detail="Invalid token: missing subject")
+            return int(user_id)
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    def user_create(self, req: UserCreateRequest) -> UserTokenResponse:
         if not re.match(self.email_regex, req.email):
             return HTTPException(
                 422,
@@ -40,5 +76,13 @@ class AuthLogic:
             session.commit()
             session.refresh(new_user)
 
-        # return the new users id
-        return {'user_id': new_user.id}
+        # create jwt
+        new_user_jwt = self.create_access_token(new_user.id)
+
+        return {
+            "access_token": new_user_jwt,
+            "token_type": "bearer"
+        }
+
+    def user_login(self, req: UserLoginRequest) -> UserTokenResponse:
+        
