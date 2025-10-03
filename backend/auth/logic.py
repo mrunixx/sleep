@@ -3,6 +3,7 @@ from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginR
 from backend.database.orm import User
 from backend.database.conn import get_session
 from dotenv import load_dotenv
+from sqlmodel import select
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -85,4 +86,17 @@ class AuthLogic:
         }
 
     def user_login(self, req: UserLoginRequest) -> UserTokenResponse:
+        with get_session() as session:
+            user = session.exec(select(User).where(User.email == req.email)).first()
+            if not user:
+                raise HTTPException(status_code=401, detail="Email does not exist in database")
+
+        if not bcrypt.checkpw(req.password.encode('utf-8'), user.hpassword.encode('utf-8')):
+            raise HTTPException(status_code=401, detail="Incorrect password")
         
+        user_jwt = self.create_access_token(user.id)
+
+        return {
+            "access_token": user_jwt,
+            "token_type": "bearer"
+        }
