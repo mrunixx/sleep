@@ -1,10 +1,88 @@
-from .types import UserCreateRequest
-from passlib.context import CryptContext
+# function imports
+from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest
+from backend.database.orm import User
+from backend.database.conn import get_session
+from dotenv import load_dotenv
+from jose import jwt, JWTError
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+# package imports
+import bcrypt
+import re
+import os
+
+# fast api imports
+from fastapi import HTTPException
+
+env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(env_path)
 
 class AuthLogic:
     def __init__(self):
-        self.hasher = CryptContext(schemes=['bcrypt'], deprecated='auto')
+        self.email_regex = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+        self.pw_regex = re.compile(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$')
+        self.secret_key = os.getenv('SECRET_KEY')
+        self.algo = os.getenv('ALGORITHM')
 
-    def userCreate(self, req: UserCreateRequest):
-        hashed_password = self.hasher.hash(req.password)
+    def create_access_token(self, user_id: int) -> jwt:
+        """
+        Creates a JWT with the user id as the subject
+        """
+        expire = datetime.now(timezone.utc) + timedelta(minutes=60)
+        payload = {
+            "sub": str(user_id), 
+            "exp": expire.timestamp()
+        }
+        return jwt.encode(payload, self.secret_key, self.algo)
+    
+    def validate_access_token(self, access_token: str) -> int:
+        """
+        Returns the user ID 
+        """
+        try:
+            payload = jwt.decode(access_token, self.secret_key, algorithms=[self.algo])
+            user_id = payload.get('sub')
+            if user_id is None:
+                raise HTTPException(status_code=401, detail="Invalid token: missing subject")
+            return int(user_id)
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    def user_create(self, req: UserCreateRequest) -> UserTokenResponse:
+        if not re.match(self.email_regex, req.email):
+            return HTTPException(
+                422,
+                detail="Email does not match required format (e.g user@example.com)"
+            )
+        elif not re.match(self.pw_regex, req.password):
+            return HTTPException(
+                422,
+                detail="Password does not match required format (atleast 8 characters, 1 letter, 1 number)"
+            )
+
+        hashed_password = bcrypt.hashpw(req.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+        new_user = User(
+            firstname=req.first_name,
+            lastname=req.last_name,
+            email=req.email,
+            hpassword=hashed_password
+        )
+
+        # insert and commit the new user
+        with get_session() as session:
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+
+        # create jwt
+        new_user_jwt = self.create_access_token(new_user.id)
+
+        return {
+            "access_token": new_user_jwt,
+            "token_type": "bearer"
+        }
+
+    def user_login(self, req: UserLoginRequest) -> UserTokenResponse:
         

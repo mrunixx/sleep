@@ -1,6 +1,6 @@
 import dotenv
 from sqlmodel import SQLModel, Field
-from conn import get_session
+from backend.database.conn import get_session
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -9,5 +9,5 @@ class User(SQLModel, table=True):
     id: int = Field(primary_key=True)
     firstname: str
     lastname: str
-    email: str
+    email: str = Field(unique=True)
     hpassword: str
