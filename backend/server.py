@@ -2,17 +2,17 @@ from typing import Union
 from fastapi import FastAPI
 
 # import request, return, etc. types from respective path folders
-
+from auth.types import UserCreateRequest
 
 app = FastAPI()
 
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"message": "You have accessed the root!"}
 
 @app.post("/v1/auth/user/create")
-def user_create():
+def user_create(req: UserCreateRequest):
     pass
 
 @app.put("/v1/auth/user/login")
