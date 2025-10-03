@@ -4,6 +4,8 @@ from fastapi import FastAPI
 # import request, return, etc. types from respective path folders
 from auth.types import UserCreateRequest
 
+# import core logic functions
+from auth.types import 
 app = FastAPI()
 
 
