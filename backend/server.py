@@ -11,7 +11,6 @@ from backend.utils.serverutils import extract_token_from_header
 from backend.auth.logic import AuthLogic
 
 app = FastAPI()
-
 authLogic = AuthLogic()
 
 # server data structures
@@ -32,11 +31,10 @@ def user_login(req: UserLoginRequest) -> UserTokenResponse:
 @app.post("/v1/auth/user/logout")
 def user_logout(token: str = Depends(extract_token_from_header)):
     expired_tokens.add(token)
-
     return {'message': 'Logout successful.'}
 
 @app.post("/v1/sleep/entry")
-def sleep_entry(access_token: str):
+def sleep_entry(token: str = Depends(extract_token_from_header)):
     pass
 
 @app.get("/v1/sleep/score")
