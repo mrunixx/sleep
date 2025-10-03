@@ -1,3 +1,4 @@
+drop database if exists sleep_db;
 create database sleep_db;
 
 \c sleep_db;

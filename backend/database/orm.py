@@ -1,6 +1,6 @@
 import dotenv
 from sqlmodel import SQLModel, Field
-from conn import get_session
+from backend.database.conn import get_session
 
 class User(SQLModel, table=True):
     __tablename__ = "users"

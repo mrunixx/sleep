@@ -2,12 +2,14 @@ from typing import Union
 from fastapi import FastAPI
 
 # import request, return, etc. types from respective path folders
-from auth.types import UserCreateRequest
+from backend.auth.utypes import UserCreateRequest
 
 # import core logic functions
-from auth.logic import AuthLogic
+from backend.auth.logic import AuthLogic
+
 app = FastAPI()
 
+authLogic = AuthLogic()
 
 @app.get("/")
 def read_root():
@@ -15,7 +17,7 @@ def read_root():
 
 @app.post("/v1/auth/user/create")
 def user_create(req: UserCreateRequest):
-    pass
+    return authLogic.user_create(req)
 
 @app.put("/v1/auth/user/login")
 def user_login():
