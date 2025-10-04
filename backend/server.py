@@ -18,6 +18,15 @@ from backend.auth.logic import AuthLogic
 app = FastAPI()
 authLogic = AuthLogic()
 
+# CORS middleware configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # server data structures
 expired_tokens = set()
 

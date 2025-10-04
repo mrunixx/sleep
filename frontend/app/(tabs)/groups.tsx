@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Button, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
@@ -12,9 +12,9 @@ import Timer from "@/components/timer";
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <ThemedView style={styles.titleContainer}>
-        <Timer />
-      </ThemedView>
+      <View style={styles.titleContainer}>
+        <Text style={styles.text}>Groups page</Text>
+      </View>
     </View>
   );
 }
@@ -29,6 +29,11 @@ const styles = StyleSheet.create({
     gap: 20,
     backgroundColor: 'black',
   },
+  text: {
+    fontSize: 50,
+    color: "white",
+
+  }
 });
 
 
