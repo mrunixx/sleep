@@ -1,4 +1,4 @@
-name: Frontend Lint
+name: Frontend Linter
 
 # When to run this workflow
 on:
@@ -30,8 +30,8 @@ jobs:
       
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm ci
+        run: cd frontend && npm ci
       
       # Step 4: Run ESLint
       - name: Run ESLint
-        run: npm run lint
+        run: cd frontend && npm run lint
