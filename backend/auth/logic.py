@@ -77,8 +77,7 @@ class AuthLogic:
             firstname=req.first_name,
             lastname=req.last_name,
             email=req.email,
-            tz=req.tz,
-            hpassword=hashed_password,
+            hpassword=hashed_password
         )
 
         # insert and commit the new user

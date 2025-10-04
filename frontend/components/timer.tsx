@@ -1,97 +1,116 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
+import { useStopwatch } from "@/hooks/useStopwatch";
+import * as Haptics from "expo-haptics";
 
-export default function Timer() {
-  // elapsed ms
-  const [time, setTime] = useState(0);
-  // state of stopwatch
-  const [running, setRunning] = useState(false); 
-  const intervalRef = useRef<number | null>(null);
+function formatTime(ms: number) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+    const s = String(totalSec % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+}
 
-  const toggleStopwatch = () => {
-    if (running) {
-      // Pause
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      } 
+export default function Stopwatch() {
+    const { time, running, startTime, endTime, toggle, reset } = useStopwatch();
 
-      intervalRef.current = null;
-      setRunning(false);
+    return (
+        <View style={styles.container}>
+            <Text style={styles.timerText}>{formatTime(time)}</Text>
 
-    } else {
-      // Start or Resume
-      const start = Date.now() - time;
-      // tick every second
-      intervalRef.current = setInterval(() => { setTime(Date.now() - start); }, 1000) as unknown as number; 
+            <View style={styles.buttonContainer}>
+                <Pressable
+                onPress={async () => {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    reset();
+                }}
+                style={[styles.button, styles.resetButton]}
+                >
+                <Text style={styles.buttonText}>Reset</Text>
+                </Pressable>
 
-      setRunning(true);
-    }
-  };
-
-
-  const resetStopwatch = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = null;
-    setRunning(false);
-    setTime(0);
-  };
-
-
-  const formatTime = (ms: number) => {
-    const totalSeconds = Math.floor(ms / 1000);
-
-    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-    const seconds = String(totalSeconds % 60).padStart(2, "0");
-
-    return `${hours}:${minutes}:${seconds}`;
-  };
+                <Pressable
+                onPress={async () => {
+                    await Haptics.impactAsync(
+                    running
+                        ? Haptics.ImpactFeedbackStyle.Medium  // stronger when pausing
+                        : Haptics.ImpactFeedbackStyle.Light   // softer when starting
+                    );
+                    toggle();
+                }}
+                style={[styles.button, running ? styles.pauseButton : styles.startButton]}
+                >
+                <Text style={running ? styles.pauseButtonText : styles.startButtonText}>
+                    {running ? "Pause" : "Start"}
+                </Text>
+                </Pressable>
+            </View>
 
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.timer}>{formatTime(time)}</Text>
-
-      <Pressable style={styles.button} onPress={toggleStopwatch}>
-        {/* if running, 'Pause', if running = false and time = 0, 'Start', if running = false and time > 0 'Resume' */}
-        <Text style={styles.buttonText}>
-          {running ? "Pause" : time === 0 ? "Start" : "Resume"}
-        </Text>
-      </Pressable>
-
-      <Pressable style={[styles.button, { backgroundColor: "#aaa" }]} onPress={resetStopwatch}>
-        <Text style={styles.buttonText}>Reset</Text>
-      </Pressable>
-    </View>
-  );
+            <Text style={styles.infoText}>Start time: {startTime || "—"}</Text>
+            <Text style={styles.infoText}>End time: {endTime || "—"}</Text>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10
-  },
-
-  timer: {
-    fontSize: 48,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "white"
-  },
-
-  button: {
-    backgroundColor: "#1e90ff",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    width: 140,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold", 
-    fontSize: 18
-  },
+    container: {
+        alignItems: "center",
+        flex: 1,
+        justifyContent: "center",
+    },
+    timerText: {
+        fontSize: 70,
+        color: "white",
+        marginBottom: 20,
+        fontWeight: 200,
+    },
+    buttonContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        margin: 20,
+        paddingHorizontal: 40,
+    },
+    button: {
+        width: 80,
+        height: 80,
+        borderRadius: 100,
+        justifyContent: "center",
+        alignItems: "center",
+        margin: 10,
+    },
+    startButton: {
+        backgroundColor: "#0c2a14",
+    },
+    pauseButton: {
+        backgroundColor: "#330d0f",
+    },
+    resetButton: {
+        backgroundColor: "#1d1d1f",
+    },
+    buttonText: {
+        color: "white",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    startButtonText: {
+        color: "#5ac66b",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    pauseButtonText: {
+        color: "#f24a4b",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    infoText: {
+        marginTop: 10,
+        color: "white",
+        fontSize: 16,
+    },
 });
-
