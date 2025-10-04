@@ -77,7 +77,7 @@ class AuthLogic:
             firstname=req.first_name,
             lastname=req.last_name,
             email=req.email,
-            hpassword=hashed_password
+            hpassword=hashed_password,
         )
 
         # insert and commit the new user
@@ -148,7 +148,6 @@ class AuthLogic:
 
     def user_logout(self, token: str) -> UserLogoutResponse:
         with get_session() as session:
-            print(token)
             curr_session = session.exec(
                 select(Session).where(Session.token == token)
             ).first()
