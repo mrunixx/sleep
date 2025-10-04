@@ -1,26 +1,25 @@
 # `sleep`: a gamified sleep-tracking experience
 
-## How to run
+## Overview
 
-### Backend + DB
-- `docker compose up --build`
+We wanted to gamify the experience of sleeping to encourage individuals to sleep more. We take an approach similar to YPT, and provide functionalities like leaderboards, metrics, and more.
 
-## Environment variables
+## Deployment
 
-### Database
-
-I don't think these users actually have to exist before you run the container.
-
+### Environment variables
+We need to set up some environment variables so the system can run.
+#### Database
 - `POSTGRES_USER`: your desired postgres username
 - `POSTGRES_PASSWORD`: your desired postgres password
 - `POSTGRES_DB`: your desired database name
 
-### Backend
-
+#### Backend
 - `DATABASE_URL`: database url, which should be composed of the above postgres username and password (e.g `postgresql://devuser:devpassword@db:5432/sleep_db`)
 - `SECRET_KEY`: a secret key of your choosing
 - `ALGORITHM`: just use `HS256`
 
 ### Frontend
-
 - `API_URL`: access the backend
+
+### Running the backend and database
+- `docker compose up --build`
