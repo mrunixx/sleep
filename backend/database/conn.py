@@ -6,7 +6,7 @@ import os
 
 # safe way to get the .env path, incase you run the script from outside
 # the folder this file is in
-env_path = Path(__file__).resolve().parents[2] / ".env"
+env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(env_path)
 
 # need to remember to add your own database url into .env

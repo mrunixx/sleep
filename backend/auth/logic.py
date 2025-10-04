@@ -16,7 +16,7 @@ import os
 # fast api imports
 from fastapi import HTTPException
 
-env_path = Path(__file__).resolve().parents[2] / ".env"
+env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(env_path)
 
 class AuthLogic:
@@ -62,7 +62,7 @@ class AuthLogic:
                 detail="Password does not match required format (atleast 8 characters, 1 letter, 1 number)"
             )
 
-        hashed_password = bcrypt.hashpw(req.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        hashed_password = bcrypt.hashpw(req.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         new_user = User(
             firstname=req.first_name,
