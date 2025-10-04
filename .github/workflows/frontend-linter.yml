@@ -1,0 +1,30 @@
+name: Frontend Linter
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # Updated to v4 for the latest version
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4  # Updated to v4 for the latest version
+        with:
+          node-version: '20'  # Specify the Node.js version
+          cache-dependency-path: frontend/package-lock.json  # Point to the correct lock file
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend  # Install in frontend directory
+
+      - name: Run Lint
+        run: npm run lint
+        working-directory: frontend  # Run lint in frontend directory
