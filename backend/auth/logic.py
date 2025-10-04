@@ -1,6 +1,6 @@
 # function imports
 from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest
-from backend.database.orm import User
+from backend.database.orm import User, Session
 from backend.database.conn import get_session
 from dotenv import load_dotenv
 from sqlmodel import select
@@ -80,7 +80,13 @@ class AuthLogic:
         # create jwt
         new_user_jwt = self.create_access_token(new_user.id)
 
-        new_session = 
+        new_session = Session(
+            token=new_user_jwt,
+            user_id=new_user.id,
+            user_info={
+
+            }
+        )
 
         return {
             "access_token": new_user_jwt,
