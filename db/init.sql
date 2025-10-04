@@ -14,6 +14,8 @@ create table if not exists auth.users (
 
 create table if not exists auth.sessions (
     token text primary key,
-    user_id int not null,
-    user_info jsonb not null
+    user_id int not null references auth.users(id) on delete cascade,
+    user_firstname text not null,
+    user_lastname text not null,
+    user_email text not null
 );

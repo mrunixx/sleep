@@ -1,5 +1,5 @@
 import dotenv
-from sqlmodel import SQLModel, Field, Column, JSONB
+from sqlmodel import SQLModel, Field, Column, JSON
 from backend.database.conn import get_session
 from typing import Dict, Any
 
@@ -19,4 +19,6 @@ class Session(SQLModel, table=True):
 
     token: str = Field(primary_key=True)
     user_id: int = Field(nullable=False)
-    user_info: Dict[str, Any] = Field(sa_column=Column(JSONB))
+    user_firstname: str = Field(nullable=False)
+    user_lastname: str = Field(nullable=False)
+    user_email: str = Field(nullable=False)
