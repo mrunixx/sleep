@@ -18,6 +18,8 @@ We need to set up some environment variables so the system can run.
 - `SECRET_KEY`: a secret key of your choosing
 - `ALGORITHM`: just use `HS256`
 
+### Frontend
+- `API_URL`: access the backend
 
 ### Running the backend and database
 - `docker compose up --build`
