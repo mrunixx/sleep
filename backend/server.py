@@ -20,7 +20,6 @@ authLogic = AuthLogic()
 # server data structures
 expired_tokens = set()
 
-
 @app.get("/")
 def read_root():
     return {"message": "You have accessed the root!"}
