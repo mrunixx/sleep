@@ -10,8 +10,9 @@ env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(env_path)
 
 # need to remember to add your own database url into .env
-db_url = os.getenv('DATABASE_URL')
+db_url = os.getenv("DATABASE_URL")
 engine = create_engine(db_url)
+
 
 # generator function that allows you to re-use the same engine
 @contextmanager
