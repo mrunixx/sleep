@@ -3,6 +3,7 @@ from sqlmodel import SQLModel, Field, Column, JSON
 from backend.database.conn import get_session
 from typing import Dict, Any
 
+
 class User(SQLModel, table=True):
     __tablename__ = "users"
     __table_args__ = {"schema": "auth"}
@@ -13,6 +14,7 @@ class User(SQLModel, table=True):
     email: str = Field(unique=True)
     tz: str = Field(nullable=False)
     hpassword: str
+
 
 class Session(SQLModel, table=True):
     __tablename__ = "sessions"
