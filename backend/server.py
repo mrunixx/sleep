@@ -6,12 +6,10 @@ from backend.auth.utypes import (
     UserCreateRequest,
     UserTokenResponse,
     UserLoginRequest,
-    UserLogoutResponse
+    UserLogoutResponse,
 )
 
-from backend.sleep.utypes import (
-    SleepEntryRequest
-)
+from backend.sleep.utypes import SleepEntryRequest
 
 # import utility functions
 from backend.utils.serverutils import extract_token_from_header
@@ -36,6 +34,7 @@ app.add_middleware(
 # server data structures
 expired_tokens = set()
 
+
 @app.get("/")
 def read_root():
     return {"message": "You have accessed the root!"}
@@ -57,7 +56,9 @@ def user_logout(token: str = Depends(extract_token_from_header)) -> UserLogoutRe
 
 
 @app.post("/v1/sleep/entry")
-def sleep_entry(req: SleepEntryRequest, token: str = Depends(extract_token_from_header)):
+def sleep_entry(
+    req: SleepEntryRequest, token: str = Depends(extract_token_from_header)
+):
     return sleepLogic.create_sleep_entry(req, token)
 
 

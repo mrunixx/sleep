@@ -4,6 +4,7 @@ from backend.database.orm import Session
 
 from sqlmodel import select
 
+
 def extract_token_from_header(Authorization: str = Header(...)):
     """
     extracts the authorization JWT from the header.
@@ -13,6 +14,7 @@ def extract_token_from_header(Authorization: str = Header(...)):
 
     token = Authorization.split(" ")[1]
     return token
+
 
 def authenticate_token(access_token: str) -> int:
     """
@@ -24,9 +26,6 @@ def authenticate_token(access_token: str) -> int:
         ).first()
 
         if not curr_session:
-            raise HTTPException(
-                status_code=401,
-                detail='Session does not exist'
-            )
-        
+            raise HTTPException(status_code=401, detail="Session does not exist")
+
         return curr_session.user_id
