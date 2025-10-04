@@ -1,5 +1,5 @@
 # function imports
-from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest
+from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest, UserLogoutResponse
 from backend.database.orm import User, Session
 from backend.database.conn import get_session
 from dotenv import load_dotenv
@@ -68,6 +68,7 @@ class AuthLogic:
             firstname=req.first_name,
             lastname=req.last_name,
             email=req.email,
+            tz=req.tz,
             hpassword=hashed_password
         )
 
@@ -80,6 +81,7 @@ class AuthLogic:
         # create jwt
         new_user_jwt = self.create_access_token(new_user.id)
 
+        # create new session
         new_session = Session(
             token=new_user_jwt,
             user_id=new_user.id,
@@ -88,6 +90,7 @@ class AuthLogic:
             user_lastname=new_user.lastname
         )
 
+        # commit the new session
         with get_session() as session:
             session.add(new_session)
             session.commit()
@@ -130,3 +133,16 @@ class AuthLogic:
             "user_lastname": user.lastname,
             "user_email": user.email
         }
+
+    def user_logout(self, token: str) -> UserLogoutResponse:
+        with get_session() as session:
+            print(token)
+            curr_session = session.exec(select(Session).where(Session.token == token)).first()
+
+            if not curr_session:
+                raise HTTPException(status_code=404, detail="Session not found")
+            
+            session.delete(curr_session)
+            session.commit()
+
+        return UserLogoutResponse(message='Successfully logged out.')

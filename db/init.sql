@@ -9,6 +9,7 @@ create table if not exists auth.users (
     firstname text not null,
     lastname text not null,
     email text unique not null,
+    tz text unique not null,
     hpassword text not null
 );
 

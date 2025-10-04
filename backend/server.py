@@ -35,7 +35,7 @@ def user_logout(token: str = Depends(extract_token_from_header)):
 
 @app.post("/v1/sleep/entry")
 def sleep_entry(token: str = Depends(extract_token_from_header)):
-    pass
+    return authLogic.user_logout(token)
 
 @app.get("/v1/sleep/score")
 def sleep_score(access_token: str):
