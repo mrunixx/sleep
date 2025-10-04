@@ -80,6 +80,8 @@ class AuthLogic:
         # create jwt
         new_user_jwt = self.create_access_token(new_user.id)
 
+        new_session = 
+
         return {
             "access_token": new_user_jwt,
             "token_type": "bearer"
