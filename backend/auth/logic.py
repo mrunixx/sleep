@@ -61,12 +61,12 @@ class AuthLogic:
         if not re.match(self.email_regex, req.email):
             return HTTPException(
                 422,
-                detail="Email does not match required format (e.g user@example.com)",
+                detail="Email does not match required format",
             )
         elif not re.match(self.pw_regex, req.password):
             return HTTPException(
                 422,
-                detail="Password does not match required format (atleast 8 characters, 1 letter, 1 number)",
+                detail="Password does not match required format",
             )
 
         hashed_password = bcrypt.hashpw(

@@ -1,8 +1,4 @@
-import dotenv
-from sqlmodel import SQLModel, Field, Column, JSON
-from backend.database.conn import get_session
-from typing import Dict, Any
-
+from sqlmodel import SQLModel, Field
 
 class User(SQLModel, table=True):
     __tablename__ = "users"

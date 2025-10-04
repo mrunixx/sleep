@@ -1,5 +1,4 @@
-from typing import Union
-from fastapi import FastAPI, Depends, Header
+from fastapi import FastAPI, Depends
 
 # import request, return, etc. types from respective path folders
 from backend.auth.utypes import (
