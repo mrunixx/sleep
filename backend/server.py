@@ -1,5 +1,6 @@
 from typing import Union
 from fastapi import FastAPI, Depends, Header
+from fastapi.middleware.cors import CORSMiddleware
 
 # import request, return, etc. types from respective path folders
 from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest, UserLogoutResponse
@@ -12,6 +13,15 @@ from backend.auth.logic import AuthLogic
 
 app = FastAPI()
 authLogic = AuthLogic()
+
+# CORS middleware configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # server data structures
 expired_tokens = set()
