@@ -1,11 +1,4 @@
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "8888:8000"
-    env_file:
-      - ./backend/.env
-
   db:
     image: postgres:15
     container_name: sleep_db_container
