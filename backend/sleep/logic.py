@@ -1,7 +1,7 @@
 # library imports
 from dotenv import load_dotenv
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 
 # user-defined types
 from backend.sleep.utypes import SleepEntryRequest, SleepEntryResponse
