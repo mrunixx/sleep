@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useStopwatch } from "@/hooks/useStopwatch";
+import * as Haptics from "expo-haptics";
 
 function formatTime(ms: number) {
     const totalSec = Math.floor(ms / 1000);
@@ -18,15 +19,30 @@ export default function Stopwatch() {
             <Text style={styles.timerText}>{formatTime(time)}</Text>
 
             <View style={styles.buttonContainer}>
-                <Pressable onPress={reset} style={[styles.button, styles.resetButton]}>
-                    <Text style={styles.buttonText}>Reset</Text>
+                <Pressable
+                onPress={async () => {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    reset();
+                }}
+                style={[styles.button, styles.resetButton]}
+                >
+                <Text style={styles.buttonText}>Reset</Text>
                 </Pressable>
 
                 <Pressable
-                    onPress={toggle}
-                    style={[styles.button, running ? styles.pauseButton : styles.startButton]}
+                onPress={async () => {
+                    await Haptics.impactAsync(
+                    running
+                        ? Haptics.ImpactFeedbackStyle.Medium  // stronger when pausing
+                        : Haptics.ImpactFeedbackStyle.Light   // softer when starting
+                    );
+                    toggle();
+                }}
+                style={[styles.button, running ? styles.pauseButton : styles.startButton]}
                 >
-                    <Text style={styles.buttonText}>{running ? "Pause" : "Start"}</Text>
+                <Text style={running ? styles.pauseButtonText : styles.startButtonText}>
+                    {running ? "Pause" : "Start"}
+                </Text>
                 </Pressable>
             </View>
 
@@ -47,6 +63,7 @@ const styles = StyleSheet.create({
         fontSize: 70,
         color: "white",
         marginBottom: 20,
+        fontWeight: 200,
     },
     buttonContainer: {
         width: "100%",
@@ -57,7 +74,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
     },
     button: {
-        width: 85,
+        width: 80,
         height: 80,
         borderRadius: 100,
         justifyContent: "center",
@@ -65,21 +82,29 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     startButton: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: "white"
+        backgroundColor: "#0c2a14",
     },
     pauseButton: {
-        backgroundColor: "orange",
+        backgroundColor: "#330d0f",
     },
     resetButton: {
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        borderColor: "#FF000080",
+        backgroundColor: "#1d1d1f",
     },
     buttonText: {
         color: "white",
-        fontWeight: "bold",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    startButtonText: {
+        color: "#5ac66b",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    pauseButtonText: {
+        color: "#f24a4b",
+        fontWeight: 400,
         fontSize: 16,
         opacity: 1,
     },

@@ -21,7 +21,7 @@ export function useStopwatch() {
 
   const start = () => {
     if (!running && time === 0) {
-      setStartTime(new Date().toISOString());
+      setStartTime(toLocalISOString(new Date()));
       setEndTime(null);
       setRunning(true);
     }
@@ -30,7 +30,7 @@ export function useStopwatch() {
   const pause = () => {
     if (running) {
       setRunning(false);
-      setEndTime(new Date().toISOString());
+      setEndTime(toLocalISOString(new Date()));
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
   };
@@ -45,14 +45,14 @@ export function useStopwatch() {
 
   const toggle = () => {
     if (running) {
-      // currently running → pause
+      // currently running - pause
       setRunning(false);
-      setEndTime(new Date().toISOString());
+      setEndTime(toLocalISOString(new Date()));
       if (intervalRef.current) clearInterval(intervalRef.current);
     } else {
-      // currently not running → start fresh
+      // currently not running - start fresh
       if (time === 0) {
-        setStartTime(new Date().toISOString());
+        setStartTime(toLocalISOString(new Date()));
         setEndTime(null);
       }
       setRunning(true);
@@ -60,4 +60,24 @@ export function useStopwatch() {
   };
 
   return { time, running, startTime, endTime, start, pause, reset, toggle };
+}
+
+function toLocalISOString(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+  const ms = String(date.getMilliseconds()).padStart(3, "0");
+
+  // Get timezone offset (+10:00, etc.)
+  const offset = -date.getTimezoneOffset();
+  const sign = offset >= 0 ? "+" : "-";
+  const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
+  const offsetMinutes = pad(Math.abs(offset) % 60);
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${ms}${sign}${offsetHours}:${offsetMinutes}`;
 }
