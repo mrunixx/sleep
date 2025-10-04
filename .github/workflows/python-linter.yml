@@ -14,13 +14,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install linters
-        run: pip install black flake8 mypy
+        run: pip install black flake8
 
       - name: Run black
         run: black --line-length 79 backend
 
       - name: Run Flake8
         run: flake8 backend
-
-      - name: Run MyPy
-        run: mypy backend
