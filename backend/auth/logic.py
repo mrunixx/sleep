@@ -83,14 +83,21 @@ class AuthLogic:
         new_session = Session(
             token=new_user_jwt,
             user_id=new_user.id,
-            user_info={
-
-            }
+            user_email=new_user.email,
+            user_firstname=new_user.firstname,
+            user_lastname=new_user.lastname
         )
+
+        with get_session() as session:
+            session.add(new_session)
+            session.commit()
 
         return {
             "access_token": new_user_jwt,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "user_firstname": new_user.firstname,
+            "user_lastname": new_user.lastname,
+            "user_email": new_user.email 
         }
 
     def user_login(self, req: UserLoginRequest) -> UserTokenResponse:
@@ -104,7 +111,22 @@ class AuthLogic:
         
         user_jwt = self.create_access_token(user.id)
 
+        new_session = Session(
+            token = user_jwt,
+            user_id = user.id,
+            user_firstname = user.firstname,
+            user_lastname = user.lastname,
+            user_email = user.email
+        )
+
+        with get_session() as session:
+            session.add(new_session)
+            session.commit()
+
         return {
             "access_token": user_jwt,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "user_firstname": user.firstname,
+            "user_lastname": user.lastname,
+            "user_email": user.email
         }
