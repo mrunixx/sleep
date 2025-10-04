@@ -11,6 +11,7 @@ class User(SQLModel, table=True):
     firstname: str = Field(nullable=False)
     lastname: str = Field(nullable=False)
     email: str = Field(unique=True)
+    tz: str = Field(nullable=False)
     hpassword: str
 
 class Session(SQLModel, table=True):
