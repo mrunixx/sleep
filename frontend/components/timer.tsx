@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useStopwatch } from "@/hooks/useStopwatch";
+import * as Haptics from "expo-haptics";
 
 function formatTime(ms: number) {
     const totalSec = Math.floor(ms / 1000);
@@ -18,12 +19,25 @@ export default function Stopwatch() {
             <Text style={styles.timerText}>{formatTime(time)}</Text>
 
             <View style={styles.buttonContainer}>
-                <Pressable onPress={reset} style={[styles.button, styles.resetButton]}>
-                    <Text style={styles.buttonText}>Reset</Text>
+                <Pressable
+                onPress={async () => {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    reset();
+                }}
+                style={[styles.button, styles.resetButton]}
+                >
+                <Text style={styles.buttonText}>Reset</Text>
                 </Pressable>
 
                 <Pressable
-                onPress={toggle}
+                onPress={async () => {
+                    await Haptics.impactAsync(
+                    running
+                        ? Haptics.ImpactFeedbackStyle.Medium  // stronger when pausing
+                        : Haptics.ImpactFeedbackStyle.Light   // softer when starting
+                    );
+                    toggle();
+                }}
                 style={[styles.button, running ? styles.pauseButton : styles.startButton]}
                 >
                 <Text style={running ? styles.pauseButtonText : styles.startButtonText}>
