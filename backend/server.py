@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 
 # import request, return, etc. types from respective path folders
 from backend.auth.utypes import (
