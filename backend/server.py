@@ -4,15 +4,18 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # import request, return, etc. types from respective path folders
 from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest, UserLogoutResponse
+from backend.sleep.utypes import SleepEntryRequest
 
 # import utility functions
 from backend.utils.serverutils import extract_token_from_header
 
 # import core logic functions
 from backend.auth.logic import AuthLogic
+from backend.sleep.logic import SleepLogic
 
 app = FastAPI()
 authLogic = AuthLogic()
+sleepLogic = SleepLogic()
 
 # CORS middleware configuration
 app.add_middleware(
@@ -43,8 +46,8 @@ def user_logout(token: str = Depends(extract_token_from_header)) -> UserLogoutRe
     return authLogic.user_logout(token)
 
 @app.post("/v1/sleep/entry")
-def sleep_entry(token: str = Depends(extract_token_from_header)):
-    pass
+def sleep_entry(req: SleepEntryRequest, token: str = Depends(extract_token_from_header)):
+    return sleepLogic.sleep_entry(token, req)
 
 @app.get("/v1/sleep/score")
 def sleep_score(access_token: str):
