@@ -23,10 +23,12 @@ export default function Stopwatch() {
                 </Pressable>
 
                 <Pressable
-                    onPress={toggle}
-                    style={[styles.button, running ? styles.pauseButton : styles.startButton]}
+                onPress={toggle}
+                style={[styles.button, running ? styles.pauseButton : styles.startButton]}
                 >
-                    <Text style={styles.buttonText}>{running ? "Pause" : "Start"}</Text>
+                <Text style={running ? styles.pauseButtonText : styles.startButtonText}>
+                    {running ? "Pause" : "Start"}
+                </Text>
                 </Pressable>
             </View>
 
@@ -47,6 +49,7 @@ const styles = StyleSheet.create({
         fontSize: 70,
         color: "white",
         marginBottom: 20,
+        fontWeight: 200,
     },
     buttonContainer: {
         width: "100%",
@@ -57,7 +60,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
     },
     button: {
-        width: 85,
+        width: 80,
         height: 80,
         borderRadius: 100,
         justifyContent: "center",
@@ -65,21 +68,29 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     startButton: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: "white"
+        backgroundColor: "#0c2a14",
     },
     pauseButton: {
-        backgroundColor: "orange",
+        backgroundColor: "#330d0f",
     },
     resetButton: {
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        borderColor: "#FF000080",
+        backgroundColor: "#1d1d1f",
     },
     buttonText: {
         color: "white",
-        fontWeight: "bold",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    startButtonText: {
+        color: "#5ac66b",
+        fontWeight: 400,
+        fontSize: 16,
+        opacity: 1,
+    },
+    pauseButtonText: {
+        color: "#f24a4b",
+        fontWeight: 400,
         fontSize: 16,
         opacity: 1,
     },
