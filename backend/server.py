@@ -2,7 +2,7 @@ from typing import Union
 from fastapi import FastAPI, Depends, Header
 
 # import request, return, etc. types from respective path folders
-from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest
+from backend.auth.utypes import UserCreateRequest, UserTokenResponse, UserLoginRequest, UserLogoutResponse
 
 # import utility functions
 from backend.utils.serverutils import extract_token_from_header
@@ -29,9 +29,8 @@ def user_login(req: UserLoginRequest) -> UserTokenResponse:
     return authLogic.user_login(req)
 
 @app.post("/v1/auth/user/logout")
-def user_logout(token: str = Depends(extract_token_from_header)):
-    expired_tokens.add(token)
-    return {'message': 'Logout successful.'}
+def user_logout(token: str = Depends(extract_token_from_header)) -> UserLogoutResponse:
+    return authLogic.user_logout(token)
 
 @app.post("/v1/sleep/entry")
 def sleep_entry(token: str = Depends(extract_token_from_header)):
