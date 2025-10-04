@@ -1,0 +1,33 @@
+name: Frontend Linter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Specify the appropriate Node.js version
+          cache: 'npm'  # Enable npm caching
+
+      - name: Install dependencies in frontend directory
+        run: |
+          cd frontend
+          npm ci 
+
+      - name: Run Lint
+        run: |
+          cd frontend
+          npm run lint
