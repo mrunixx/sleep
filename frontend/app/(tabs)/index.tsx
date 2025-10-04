@@ -1,11 +1,6 @@
-import { Image } from 'expo-image';
-import { Button, Platform, StyleSheet } from 'react-native';
+import { StyleSheet , View } from 'react-native';
 
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-import { View, Pressable, Text } from 'react-native';
 
 import Timer from "@/components/timer";
 
