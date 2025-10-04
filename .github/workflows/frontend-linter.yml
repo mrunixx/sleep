@@ -22,28 +22,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Check for package-lock.json
-        run: |
-          if [ -f frontend/package-lock.json ]; then
-            echo "package-lock.json found"
-            ls -la frontend/package-lock.json
-          else
-            echo "package-lock.json NOT found"
-            ls -la frontend/
-          fi
-      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
       
       - name: Install dependencies
         working-directory: frontend
