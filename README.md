@@ -17,8 +17,10 @@ I don't think these users actually have to exist before you run the container.
 
 ### Backend
 
-
-
 - `DATABASE_URL`: database url, which should be composed of the above postgres username and password (e.g `postgresql://devuser:devpassword@db:5432/sleep_db`)
 - `SECRET_KEY`: a secret key of your choosing
 - `ALGORITHM`: just use `HS256`
+
+### Frontend
+
+- `API_URL`: access the backend
