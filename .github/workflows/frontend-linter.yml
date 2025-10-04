@@ -2,36 +2,31 @@ name: Frontend Linter
 
 on:
   push:
-    branches: [main, develop]
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend-linter.yml'
-  
+    branches:
+      - main
   pull_request:
-    branches: [main, develop]
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend-linter.yml'
+    branches:
+      - main
 
 jobs:
   lint:
-    name: Run ESLint
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: '20'
-          cache: 'npm'
-      
+
       - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-      
-      - name: Run ESLint
-        working-directory: frontend
-        run: npm run lint
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run Lint
+        run: |
+          cd frontend
+          npm run lint
