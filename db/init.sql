@@ -29,5 +29,5 @@ create table if not exists sleep.entry (
     start_dt_utc timestamptz not null,
     end_dt_utc timestamptz not null,
     tz_name text not null,
-    sleep_time_s int not null
+    sleep_time_s numeric not null
 );
