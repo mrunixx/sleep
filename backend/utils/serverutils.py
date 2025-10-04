@@ -1,5 +1,4 @@
-from fastapi import Depends, Header, HTTPException
-from backend.auth.logic import AuthLogic
+from fastapi import Header, HTTPException
 
 
 def extract_token_from_header(Authorization: str = Header(...)):
