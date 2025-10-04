@@ -19,12 +19,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '20'  # Specify the appropriate Node.js version
+          cache: 'npm'  # Enable npm caching
 
-      - name: Install dependencies
+      - name: Install dependencies in frontend directory
         run: |
           cd frontend
-          npm install
+          npm ci
 
       - name: Run Lint
         run: |
