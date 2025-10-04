@@ -6,7 +6,11 @@ from backend.auth.utypes import (
     UserCreateRequest,
     UserTokenResponse,
     UserLoginRequest,
-    UserLogoutResponse,
+    UserLogoutResponse
+)
+
+from backend.sleep.utypes import (
+    SleepEntryRequest
 )
 
 # import utility functions
@@ -14,9 +18,11 @@ from backend.utils.serverutils import extract_token_from_header
 
 # import core logic functions
 from backend.auth.logic import AuthLogic
+from backend.sleep.logic import SleepLogic
 
 app = FastAPI()
 authLogic = AuthLogic()
+sleepLogic = SleepLogic()
 
 # CORS middleware configuration
 app.add_middleware(
@@ -51,8 +57,8 @@ def user_logout(token: str = Depends(extract_token_from_header)) -> UserLogoutRe
 
 
 @app.post("/v1/sleep/entry")
-def sleep_entry(token: str = Depends(extract_token_from_header)):
-    pass
+def sleep_entry(req: SleepEntryRequest, token: str = Depends(extract_token_from_header)):
+    return sleepLogic.create_sleep_entry(req, token)
 
 
 @app.get("/v1/sleep/score")

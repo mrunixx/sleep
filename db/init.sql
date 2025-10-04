@@ -4,6 +4,8 @@ drop schema if exists sleep;
 create schema if not exists auth;
 create schema if not exists sleep;
 
+
+-- authentication relations
 create table if not exists auth.users (
     id serial primary key,
     firstname text not null,
@@ -19,3 +21,5 @@ create table if not exists auth.sessions (
     user_lastname text not null,
     user_email text not null
 );
+
+-- sleep tracking related relations

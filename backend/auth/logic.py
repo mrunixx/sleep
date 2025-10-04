@@ -148,7 +148,6 @@ class AuthLogic:
 
     def user_logout(self, token: str) -> UserLogoutResponse:
         with get_session() as session:
-            print(token)
             curr_session = session.exec(
                 select(Session).where(Session.token == token)
             ).first()
