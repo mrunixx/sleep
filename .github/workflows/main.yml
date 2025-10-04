@@ -1,37 +1,45 @@
 name: Frontend Linter
 
-# When to run this workflow
 on:
-  # Run on push to main and develop branches
   push:
-    branches: [main]
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/lint.yml'
   
-  # Run on pull requests targeting main and develop
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/lint.yml'
 
-# Define the jobs
 jobs:
   lint:
     name: Run ESLint
     runs-on: ubuntu-latest
     
+    defaults:
+      run:
+        working-directory: frontend
+    
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
       
-      # Step 3: Install dependencies
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+      
       - name: Install dependencies
-        run: cd frontend && npm ci
+        run: npm ci
       
-      # Step 4: Run ESLint
       - name: Run ESLint
-        run: cd frontend && npm run lint
+        run: npm run lint
