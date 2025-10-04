@@ -17,7 +17,7 @@ jobs:
         run: pip install black flake8 mypy
 
       - name: Run black
-        run: black --line-length 80 backend
+        run: black --line-length 79 backend
 
       - name: Run Flake8
         run: flake8 backend
